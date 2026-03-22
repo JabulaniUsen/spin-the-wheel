@@ -99,7 +99,7 @@
         "transform": "lodash/{{member}}"
       }
     },
-    "outputFileTracingRoot": "/Users/mac/Downloads/spin-the-wheel-game",
+    "outputFileTracingRoot": "/Users/mac",
     "cacheComponents": false,
     "cacheLife": {
       "default": {
@@ -289,12 +289,12 @@
     "bundlePagesRouterDependencies": false,
     "configFileName": "next.config.mjs",
     "turbopack": {
-      "root": "/Users/mac/Downloads/spin-the-wheel-game"
+      "root": "/Users/mac"
     },
     "distDirRoot": ".next"
   },
-  "appDir": "/Users/mac/Downloads/spin-the-wheel-game",
-  "relativeAppDir": "",
+  "appDir": "/Users/mac/Desktop/untitled folder",
+  "relativeAppDir": "Desktop/untitled folder",
   "files": [
     ".next/routes-manifest.json",
     ".next/server/pages-manifest.json",
