@@ -2,7 +2,7 @@
 CREATE TABLE IF NOT EXISTS participants (
   id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
   name TEXT NOT NULL,
-  color TEXT NOT NULL CHECK (color IN ('Red', 'Blue', 'Green')),
+  color TEXT NOT NULL CHECK (color IN ('Red', 'Blue', 'Green', 'Yellow', 'White')),
   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW() NOT NULL,
   UNIQUE(name)
 );

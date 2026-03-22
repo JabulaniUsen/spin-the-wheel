@@ -106,6 +106,12 @@ export default function Home() {
 
       <div className="text-center mt-8 sm:mt-12 flex flex-col gap-3">
         <p className="text-xs sm:text-sm text-foreground/70 font-body">Each person spins only once</p>
+        <button
+          onClick={() => { localStorage.clear(); window.location.reload() }}
+          className="text-xs text-foreground/30 hover:text-foreground/60 font-body transition-colors underline"
+        >
+          Clear cached data
+        </button>
         <a
           href="https://jabulaniusen.com"
           target="_blank"
