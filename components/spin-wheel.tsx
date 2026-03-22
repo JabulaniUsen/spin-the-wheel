@@ -36,9 +36,6 @@ const angleToPoint = (angleDeg: number, centerX: number, centerY: number, radius
   return { x, y }
 }
 
-// LocalStorage key prefix for storing spun users
-const STORAGE_KEY_PREFIX = 'spin-wheel-user-'
-
 export default function SpinWheel({ onSpinComplete, lastSpin, onCheckName }: SpinWheelProps) {
   const [name, setName] = useState("")
   const [isSpinning, setIsSpinning] = useState(false)
@@ -50,111 +47,28 @@ export default function SpinWheel({ onSpinComplete, lastSpin, onCheckName }: Spi
   const [isSaving, setIsSaving] = useState(false)
   const [spinDuration, setSpinDuration] = useState(7000) // Default duration
 
-  // Restore name and spin state from localStorage on mount (for page refresh)
-  useEffect(() => {
-    // Check for saved spins
-    const savedSpins = localStorage.getItem(`${STORAGE_KEY_PREFIX}all`)
-    if (savedSpins) {
-      try {
-        const spins = JSON.parse(savedSpins)
-        if (spins.length > 0) {
-          // Get the most recent spin (last entry in array)
-          const mostRecentSpin = spins[spins.length - 1]
-          
-          // Restore the name to the input field
-          setName(mostRecentSpin.name)
-          
-          // Restore the spin state - will be set by the next useEffect when name is set
-        }
-      } catch (err) {
-        console.error('Error reading from localStorage on mount:', err)
-      }
-    }
-  }, []) // Only run on mount
-
-  // Restore spin state when name matches a saved spin (with debounce)
-  useEffect(() => {
-    // Wait for name to be entered
-    if (!name.trim()) {
-      setHasSpun(false)
-      setSelectedColor(null)
-      return
-    }
-    
-    // Wait 2 seconds after user stops typing before checking
-    const timeoutId = setTimeout(() => {
-      const savedSpins = localStorage.getItem(`${STORAGE_KEY_PREFIX}all`)
-      if (savedSpins) {
-        try {
-          const spins = JSON.parse(savedSpins)
-          const matchingSpin = spins.find((spin: { name: string }) => 
-            spin.name.toLowerCase().trim() === name.toLowerCase().trim()
-          )
-          
-          if (matchingSpin) {
-            setHasSpun(true)
-            setSelectedColor(matchingSpin.color)
-          } else {
-            // If name doesn't match, reset spin state
-            setHasSpun(false)
-            setSelectedColor(null)
-          }
-        } catch (err) {
-          console.error('Error reading from localStorage:', err)
-        }
-      } else {
-        setHasSpun(false)
-        setSelectedColor(null)
-      }
-    }, 1500) // Wait 1.5 seconds after typing stops
-    
-    return () => clearTimeout(timeoutId)
-  }, [name])
-
-  // Check if current name has already spun (both localStorage and database)
+  // Check if current name has already spun (database only)
   useEffect(() => {
     const checkExistingSpin = async () => {
       if (!name.trim()) {
         setHasSpun(false)
+        setSelectedColor(null)
         return
       }
 
       setIsChecking(true)
       setError(null)
-      
-      // First check localStorage for immediate feedback
-      const savedSpins = localStorage.getItem(`${STORAGE_KEY_PREFIX}all`)
-      if (savedSpins) {
-        try {
-          const spins = JSON.parse(savedSpins)
-          const hasSpunLocally = spins.some((spin: { name: string }) => 
-            spin.name.toLowerCase().trim() === name.toLowerCase().trim()
-          )
-          if (hasSpunLocally) {
-            setHasSpun(true)
-            setIsChecking(false)
-            return
-          }
-        } catch (err) {
-          console.error('Error reading from localStorage:', err)
-        }
-      }
 
-      // Then check database (authoritative source)
       if (onCheckName) {
         try {
           const exists = await onCheckName(name.trim())
-          if (exists) {
-            setHasSpun(true)
-          } else {
-            setHasSpun(false)
-          }
+          setHasSpun(exists)
+          if (!exists) setSelectedColor(null)
         } catch (err) {
           console.error('Error checking name:', err)
-          // Don't show error for check failures, just allow user to proceed
         }
       }
-      
+
       setIsChecking(false)
     }
 
@@ -269,35 +183,9 @@ export default function SpinWheel({ onSpinComplete, lastSpin, onCheckName }: Spi
       setIsSaving(true)
       try {
         await onSpinComplete(name.trim(), selectedColorName)
-        
-        // Save to localStorage so it persists after refresh
-        const savedSpins = localStorage.getItem(`${STORAGE_KEY_PREFIX}all`)
-        let spins = savedSpins ? JSON.parse(savedSpins) : []
-        
-        // Remove any existing entry for this name (case-insensitive)
-        spins = spins.filter((spin: { name: string }) => 
-          spin.name.toLowerCase().trim() !== name.toLowerCase().trim()
-        )
-        
-        // Add new spin result
-        spins.push({
-          name: name.trim(),
-          color: selectedColorName,
-          timestamp: new Date().toISOString()
-        })
-        
-        // Save back to localStorage
-        localStorage.setItem(`${STORAGE_KEY_PREFIX}all`, JSON.stringify(spins))
-        
-        // Also save individual entry for quick lookup
-        localStorage.setItem(
-          `${STORAGE_KEY_PREFIX}${name.toLowerCase().trim()}`,
-          JSON.stringify({ name: name.trim(), color: selectedColorName })
-        )
-        
         setHasSpun(true)
         setError(null)
-        console.log('✅ Spin saved to localStorage and database')
+        console.log('✅ Spin saved to database')
       } catch (err) {
         console.error('Error saving spin:', err)
         setError("Failed to save your spin. Please try again.")
