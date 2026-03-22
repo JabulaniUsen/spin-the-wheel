@@ -38,9 +38,9 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    if (!['Red', 'Blue', 'Green'].includes(body.color)) {
+    if (!['Red', 'Blue', 'Green', 'Yellow', 'White'].includes(body.color)) {
       return NextResponse.json(
-        { error: 'Invalid color. Must be Red, Blue, or Green' },
+        { error: 'Invalid color. Must be Red, Blue, Green, Yellow, or White' },
         { status: 400 }
       )
     }

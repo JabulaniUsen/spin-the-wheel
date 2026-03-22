@@ -6,15 +6,18 @@ interface WheelStatsProps {
 }
 
 export default function WheelStats({ participants, loading = false }: WheelStatsProps) {
-  const redCount = participants.filter((p) => p.color === "Red").length
-  const blueCount = participants.filter((p) => p.color === "Blue").length
-  const greenCount = participants.filter((p) => p.color === "Green").length
-
-  const stats = [
-    { color: "Red", count: redCount, hex: "#ff4757", emoji: "🔴" },
-    { color: "Blue", count: blueCount, hex: "#3366ff", emoji: "🔵" },
-    { color: "Green", count: greenCount, hex: "#2ed573", emoji: "🟢" },
+  const COLORS = [
+    { color: "Red", hex: "#ff4757", emoji: "🔴" },
+    { color: "Blue", hex: "#3366ff", emoji: "🔵" },
+    { color: "Green", hex: "#2ed573", emoji: "🟢" },
+    { color: "Yellow", hex: "#ffd32a", emoji: "🟡" },
+    { color: "White", hex: "#f1f2f6", emoji: "⬜" },
   ]
+
+  const stats = COLORS.map((c) => ({
+    ...c,
+    count: participants.filter((p) => p.color === c.color).length,
+  }))
 
   return (
     <div className="w-full h-full flex flex-col gap-6">
@@ -71,9 +74,7 @@ export default function WheelStats({ participants, loading = false }: WheelStats
                   className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
                 >
                   <span className="font-heading text-lg">
-                    {participant.color === "Red" && "🔴"}
-                    {participant.color === "Blue" && "🔵"}
-                    {participant.color === "Green" && "🟢"}
+                    {COLORS.find((c) => c.color === participant.color)?.emoji}
                   </span>
                   <span className="font-body text-foreground flex-1">{participant.name}</span>
                   <span className="font-body text-sm text-foreground/50">#{participants.length - index}</span>

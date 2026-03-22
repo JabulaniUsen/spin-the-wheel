@@ -53,7 +53,7 @@ __turbopack_context__.s([
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$supabase$2f$supabase$2d$js$2f$dist$2f$module$2f$index$2e$js__$5b$app$2d$route$5d$__$28$ecmascript$29$__$3c$locals$3e$__ = __turbopack_context__.i("[project]/node_modules/@supabase/supabase-js/dist/module/index.js [app-route] (ecmascript) <locals>");
 ;
 // Use environment variables or fallback to hardcoded values (matching client.ts)
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || "https://fsxvpvpmxxkpxqqrcink.supabase.co";
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || "https://nhvdhzyctqidxdryjbrp.supabase.co";
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZzeHZwdnBteHhrcHhxcXJjaW5rIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQwMTY4NjQsImV4cCI6MjA3OTU5Mjg2NH0.b0M89sc3Y3M6sArPMP2DBcUPAnggOptWJ5PMKFQtN5A";
 const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 if ("TURBOPACK compile-time falsy", 0) //TURBOPACK unreachable

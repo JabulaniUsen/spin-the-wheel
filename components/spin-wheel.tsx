@@ -10,9 +10,11 @@ interface SpinWheelProps {
 }
 
 const COLORS = [
-  { name: "Red", hex: "#ff4757", label: "🔴", startAngle: 0, endAngle: 120 },
-  { name: "Blue", hex: "#3366ff", label: "🔵", startAngle: 120, endAngle: 240 },
-  { name: "Green", hex: "#2ed573", label: "🟢", startAngle: 240, endAngle: 360 },
+  { name: "Red", hex: "#ff4757", label: "🔴", startAngle: 0, endAngle: 72 },
+  { name: "Blue", hex: "#3366ff", label: "🔵", startAngle: 72, endAngle: 144 },
+  { name: "Green", hex: "#2ed573", label: "🟢", startAngle: 144, endAngle: 216 },
+  { name: "Yellow", hex: "#ffd32a", label: "🟡", startAngle: 216, endAngle: 288 },
+  { name: "White", hex: "#f1f2f6", label: "⬜", startAngle: 288, endAngle: 360 },
 ]
 
 // Random spin durations in milliseconds (for variety)
@@ -240,14 +242,9 @@ export default function SpinWheel({ onSpinComplete, lastSpin, onCheckName }: Spi
       const actualColorAngle = (360 - finalRotation) % 360
       
       // Determine which color section this angle falls into
-      let actualSelectedColor: typeof COLORS[0]
-      if (actualColorAngle < 120) {
-        actualSelectedColor = COLORS[0] // Red (0-120)
-      } else if (actualColorAngle < 240) {
-        actualSelectedColor = COLORS[1] // Blue (120-240)
-      } else {
-        actualSelectedColor = COLORS[2] // Green (240-360)
-      }
+      const actualSelectedColor = COLORS.find(
+        (c) => actualColorAngle >= c.startAngle && actualColorAngle < c.endAngle
+      ) ?? COLORS[COLORS.length - 1]
       
       // Use the actually calculated color, not the randomly selected one (for debugging)
       // This ensures we save what actually lands at the pointer
@@ -313,7 +310,7 @@ export default function SpinWheel({ onSpinComplete, lastSpin, onCheckName }: Spi
 
   return (
     <div className="flex flex-col items-center gap-6 sm:gap-8 w-full max-w-2xl mx-auto">
-      <div className="relative w-[320px] h-[320px] sm:w-[400px] sm:h-[400px] md:w-[450px] md:h-[450px] lg:w-[500px] lg:h-[500px] animate-bounce-in">
+      <div className="relative w-[90vw] h-[90vw] max-w-[320px] max-h-[320px] sm:w-[400px] sm:h-[400px] md:w-[450px] md:h-[450px] lg:w-[500px] lg:h-[500px] animate-bounce-in">
         {/* Pointer */}
         <div className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-2 sm:-translate-y-3 z-10">
           <div className="w-0 h-0 border-l-[10px] sm:border-l-[12px] border-r-[10px] sm:border-r-[12px] border-t-[14px] sm:border-t-[18px] border-l-transparent border-r-transparent border-t-primary drop-shadow-lg"></div>
@@ -422,9 +419,7 @@ export default function SpinWheel({ onSpinComplete, lastSpin, onCheckName }: Spi
             <p className="font-body text-sm text-foreground/60 mb-2">🎊 Amazing! 🎊</p>
             <p className="font-heading text-xl sm:text-2xl text-primary mb-2 font-bold">{lastSpin.name}</p>
             <p className="font-heading text-2xl sm:text-3xl mb-3 font-bold">
-              {selectedColor === "Red" && "🔴 RED"}
-              {selectedColor === "Blue" && "🔵 BLUE"}
-              {selectedColor === "Green" && "🟢 GREEN"}
+              {COLORS.find((c) => c.name === selectedColor)?.label} {selectedColor?.toUpperCase()}
             </p>
             <p className="font-body text-foreground/70 text-sm sm:text-base">
               Congratulations! You're expected to represent this color at the picnic.
