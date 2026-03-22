@@ -1,30 +1,17 @@
 "use client"
 
-import { useState, useCallback, useEffect } from "react"
+import { useCallback } from "react"
 import SpinWheel from "@/components/spin-wheel"
 import WheelStats from "@/components/wheel-stats"
 import { useParticipants } from "@/lib/hooks/use-participants"
 
 export default function Home() {
   const { participants, loading, error, refetch } = useParticipants()
-  const [lastSpin, setLastSpin] = useState<{ name: string; color: string } | null>(null)
 
-  // Restore last spin from localStorage on mount
-  useEffect(() => {
-    const savedSpins = localStorage.getItem('spin-wheel-user-all')
-    if (savedSpins) {
-      try {
-        const spins = JSON.parse(savedSpins)
-        // Get the most recent spin (last in array)
-        if (spins.length > 0) {
-          const mostRecent = spins[spins.length - 1]
-          setLastSpin({ name: mostRecent.name, color: mostRecent.color })
-        }
-      } catch (err) {
-        console.error('Error restoring last spin:', err)
-      }
-    }
-  }, [])
+  // Derive last spin from the most recent participant in the database (shared across all browsers)
+  const lastSpin = participants.length > 0
+    ? { name: participants[0].name, color: participants[0].color }
+    : null
 
   const handleSpinComplete = useCallback(async (name: string, color: string) => {
     try {
@@ -42,9 +29,6 @@ export default function Home() {
         throw new Error(result.error || "Failed to save participant")
       }
 
-      // Set last spin result immediately for display
-      setLastSpin({ name, color })
-      
       // The participant is now saved to the database (publicly visible)
       // The leaderboard will update automatically via:
       // 1. Real-time subscription (instant update)

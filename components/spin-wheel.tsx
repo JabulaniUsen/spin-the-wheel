@@ -12,9 +12,9 @@ interface SpinWheelProps {
 const COLORS = [
   { name: "Red", hex: "#ff4757", label: "🔴", startAngle: 0, endAngle: 72 },
   { name: "Blue", hex: "#3366ff", label: "🔵", startAngle: 72, endAngle: 144 },
-  { name: "Green", hex: "#2ed573", label: "🟢", startAngle: 144, endAngle: 216 },
-  { name: "Yellow", hex: "#ffd32a", label: "🟡", startAngle: 216, endAngle: 288 },
-  { name: "White", hex: "#f1f2f6", label: "⬜", startAngle: 288, endAngle: 360 },
+  { name: "White", hex: "#f1f2f6", label: "⬜", startAngle: 144, endAngle: 216 },
+  { name: "Green", hex: "#2ed573", label: "🟢", startAngle: 216, endAngle: 288 },
+  { name: "Yellow", hex: "#ffd32a", label: "🟡", startAngle: 288, endAngle: 360 },
 ]
 
 // Random spin durations in milliseconds (for variety)
