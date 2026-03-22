@@ -190,9 +190,12 @@ export default function SpinWheel({ onSpinComplete, lastSpin, onCheckName }: Spi
     const maxSpins = currentSpinDuration <= 7000 ? 10 : currentSpinDuration <= 10000 ? 15 : currentSpinDuration <= 12000 ? 18 : 25
     const randomSpins = Math.floor(Math.random() * (maxSpins - minSpins + 1)) + minSpins
     
-    // Randomly select a color FIRST (equal probability for each)
-    const randomColorIndex = Math.floor(Math.random() * COLORS.length)
-    const selectedColorObj = COLORS[randomColorIndex]
+    // Randomly select a color FIRST (equal probability for each), excluding last spin's color
+    const availableColors = lastSpin
+      ? COLORS.filter((c) => c.name !== lastSpin.color)
+      : COLORS
+    const randomColorIndex = Math.floor(Math.random() * availableColors.length)
+    const selectedColorObj = availableColors[randomColorIndex]
     
     // Get the target section for this color
     // Each color spans 120 degrees, we want to land somewhere in the middle section
